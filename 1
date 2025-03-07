@@ -1,0 +1,43 @@
+ 
+
+import itertools
+import random
+import string
+
+def decrypt(ciphertext, key_mapping):
+    alphabet = string.ascii_lowercase
+    reverse_mapping = {v: k for k, v in key_mapping.items()}
+    return "".join(reverse_mapping.get(char, char) for char in ciphertext.lower())
+
+def generate_random_permutations(n=1000):
+    alphabet = list(string.ascii_lowercase)
+    permutations = set()
+    while len(permutations) < n:
+        random.shuffle(alphabet)
+        permutations.add("".join(alphabet))
+    return list(permutations)
+
+def brute_force_monoalphabetic(ciphertext, num_attempts=1000):
+    alphabet = string.ascii_lowercase
+    key_permutations = generate_random_permutations(num_attempts)
+    
+    possible_plaintexts = []
+    
+    for perm in key_permutations:
+        key_mapping = dict(zip(alphabet, perm))
+        decrypted_text = decrypt(ciphertext, key_mapping)
+        possible_plaintexts.append(decrypted_text)
+    
+    return possible_plaintexts
+
+
+ciphertext = "wklv lv d whvw phvvdjh"  # Example encrypted message (Caesar shift of 3)
+
+
+possible_decryptions = brute_force_monoalphabetic(ciphertext, num_attempts=500)
+
+
+for i, decrypted in enumerate(possible_decryptions[:10]):
+    print(f"Attempt {i+1}: {decrypted}")
+
+
